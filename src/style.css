@@ -1,0 +1,70 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+body {
+    font-family: 'Inter', sans-serif;
+    scroll-behavior: smooth;
+}
+
+.arabic-text,
+.arabic-font {
+    font-family: 'Noto Naskh Arabic', serif;
+}
+
+.transition-all {
+    transition: all 0.3s ease-in-out;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+.tab.active {
+    border-color: #0d9488;
+    color: #0d9488;
+    background-color: #f0fdfa;
+}
+
+.dark .tab.active {
+    background-color: #115e59;
+    color: #ccfbf1;
+}
+
+#save-master-index-btn:disabled {
+    background-color: #9ca3af;
+    cursor: not-allowed;
+}
+
+#save-master-index-btn.dirty {
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: .85;
+    }
+}
+
+.drag-handle {
+    cursor: grab;
+}
+
+.sortable-ghost {
+    opacity: 0.4;
+    background: #c7d2fe;
+}
+
+.sortable-chosen {
+    cursor: grabbing;
+}
+
+#notification-bar {
+    transition: transform 0.5s ease-in-out, background-color 0.3s;
+}
