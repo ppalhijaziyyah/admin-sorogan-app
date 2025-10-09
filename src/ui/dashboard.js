@@ -5,13 +5,17 @@ import { showModal } from './modal.js';
 import { showNotification } from './notifications.js';
 import { openEditor } from './editor.js';
 
-function handleLessonCardClick(e) {
+function handleDashboardClick(e) {
     const button = e.target.closest('button[data-action]');
     if (!button) return;
+
     const action = button.dataset.action;
     const id = button.dataset.id;
 
-    if (action === 'edit') openEditor(id);
+    if (action === 'edit') {
+        openEditor(id);
+    }
+    
     if (action === 'delete') {
         showModal('Yakin ingin menghapus pelajaran ini dari indeks?', () => {
             state.masterIndex = state.masterIndex.filter(l => l.id !== id);
@@ -20,6 +24,11 @@ function handleLessonCardClick(e) {
             renderDashboard();
             showNotification("Pelajaran dihapus dari sesi ini. Jangan lupa simpan perubahan indeks.", 'info');
         });
+    }
+
+    if (action === 'sort') {
+        const direction = button.dataset.direction;
+        handleSort(direction);
     }
 }
 
@@ -69,7 +78,24 @@ export function renderDashboard() {
 
         lessonsFound = lessonsForLevel.length > 0 || lessonsFound;
         const section = document.createElement('div');
-        section.innerHTML = `<h2 class="text-2xl font-bold mb-4 pb-2 border-b-2 text-${levelDetails[level].color}-700 dark:text-${levelDetails[level].color}-400 border-${levelDetails[level].color}-500">${levelDetails[level].title}</h2>`;
+        const headerDiv = document.createElement('div');
+        headerDiv.className = `flex justify-between items-center mb-4 pb-2 border-b-2 border-${levelDetails[level].color}-500`;
+
+        headerDiv.innerHTML = `
+            <h2 class="text-2xl font-bold text-${levelDetails[level].color}-700 dark:text-${levelDetails[level].color}-400">${levelDetails[level].title}</h2>
+            ${lessonsForLevel.length > 0 ? `
+                <div class="flex gap-2">
+                    <button data-action="sort" data-direction="asc" class="p-2 rounded-md bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors" title="Urutkan A-Z">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4h13M3 8h9m-9 4h6m4 0l4-4m0 0l4 4m-4-4v12" /></svg>
+                    </button>
+                    <button data-action="sort" data-direction="desc" class="p-2 rounded-md bg-gray-200 dark:bg-gray-600 hover:bg-gray-300 dark:hover:bg-gray-500 transition-colors" title="Urutkan Z-A">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 4h13M3 8h9m-9 4h6m4 0l4 4m0 0l4-4m-4 4V4" /></svg>
+                    </button>
+                </div>
+            ` : ''}
+        `;
+        section.appendChild(headerDiv);
+
 
         const gridContainer = document.createElement('div');
         gridContainer.id = `grid-${level}`;
@@ -161,7 +187,5 @@ export function renderTabButtons() {
 
 export function initDashboard() {
     DOM.tabContainer.addEventListener('click', handleTabClick);
-    DOM.lessonGroupsContainer.addEventListener('click', handleLessonCardClick);
-    DOM.sortAscBtn.addEventListener('click', () => handleSort('asc'));
-    DOM.sortDescBtn.addEventListener('click', () => handleSort('desc'));
+    DOM.lessonGroupsContainer.addEventListener('click', handleDashboardClick);
 }
