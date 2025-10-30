@@ -83,7 +83,8 @@ function handleImport(event) {
                         berharakat: berharakat,
                         gundul: removeHarakat(berharakat),
                         terjemahan: row.terjemahan || '',
-                        irab: row.irab || ''
+                        irab: row.irab || '',
+                        link: row.link || ''
                     });
                 });
 

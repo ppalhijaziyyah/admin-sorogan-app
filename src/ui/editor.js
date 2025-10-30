@@ -81,6 +81,19 @@ function renderWordEditors() {
         state.currentLessonData.textData = [[]];
     }
 
+    // Add headers
+    const header = document.createElement('div');
+    header.className = 'p-3 grid grid-cols-1 md:grid-cols-5 gap-3 items-center font-bold text-sm text-gray-600 dark:text-gray-400 border-b-2 border-gray-300 dark:border-gray-600';
+    header.innerHTML = `
+        <div class="text-right">Teks Arab</div>
+        <div>Terjemahan</div>
+        <div class="text-right">I'rab</div>
+        <div>Link (Opsional)</div>
+        <div class="text-center">Aksi</div>
+    `;
+    container.appendChild(header);
+
+
     state.currentLessonData.textData.forEach((paragraph, pIndex) => {
         const paragraphWrapper = document.createElement('fieldset');
         paragraphWrapper.className = 'border-2 border-gray-300 dark:border-gray-600 rounded-lg p-4';
@@ -89,7 +102,7 @@ function renderWordEditors() {
         paragraph.forEach((word, wIndex) => {
             const isPunctuation = /[.،؟:!()"«»]/.test(word.berharakat) && word.berharakat.length === 1;
             const wordDiv = document.createElement('div');
-            wordDiv.className = 'p-3 border-t first:border-t-0 border-gray-200 dark:border-gray-700 grid grid-cols-1 md:grid-cols-4 gap-3 items-center';
+            wordDiv.className = 'p-3 border-t first:border-t-0 border-gray-200 dark:border-gray-700 grid grid-cols-1 md:grid-cols-5 gap-3 items-center';
 
             const arabicInput = document.createElement('input');
             arabicInput.type = 'text';
@@ -115,6 +128,14 @@ function renderWordEditors() {
             irabInput.oninput = (e) => { state.currentLessonData.textData[pIndex][wIndex].irab = e.target.value; };
             irabInput.disabled = isPunctuation;
 
+            const linkInput = document.createElement('input');
+            linkInput.type = 'text';
+            linkInput.placeholder = 'https://...';
+            linkInput.value = word.link || '';
+            linkInput.className = 'w-full border-gray-300 rounded-md dark:bg-gray-800 dark:border-gray-600';
+            linkInput.oninput = (e) => { state.currentLessonData.textData[pIndex][wIndex].link = e.target.value; };
+            linkInput.disabled = isPunctuation;
+
             const actionDiv = document.createElement('div');
             actionDiv.className = 'flex items-center justify-center gap-2';
             actionDiv.innerHTML = `
@@ -122,7 +143,7 @@ function renderWordEditors() {
             <button data-action="delete-word" data-pindex="${pIndex}" data-windex="${wIndex}" class="bg-red-500 hover:red-600 text-white rounded-full p-2 w-8 h-8 flex items-center justify-center" title="Hapus Baris Ini">-</button>
         `;
 
-            wordDiv.append(arabicInput, translationInput, irabInput, actionDiv);
+            wordDiv.append(arabicInput, translationInput, irabInput, linkInput, actionDiv);
             paragraphWrapper.appendChild(wordDiv);
         });
         container.appendChild(paragraphWrapper);
@@ -168,14 +189,15 @@ function handleProcessText() {
             berharakat: token,
             gundul: removeHarakat(token),
             terjemahan: '',
-            irab: ''
+            irab: '',
+            link: ''
         }));
     });
     renderWordEditors();
 }
 
 function addWordRow(pIndex, wIndex) {
-    const newWord = { berharakat: "", gundul: "", terjemahan: "", irab: "" };
+    const newWord = { berharakat: "", gundul: "", terjemahan: "", irab: "", link: "" };
     state.currentLessonData.textData[pIndex].splice(wIndex + 1, 0, newWord);
     renderWordEditors();
 }

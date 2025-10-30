@@ -97,6 +97,7 @@ Sheet ini berisi teks pelajaran kata per kata. Setiap baris mewakili satu kata a
 | `berharakat` | **Ya** | Teks Arab lengkap dengan harakat. |
 | `terjemahan` | Tidak | Terjemahan bahasa Indonesia untuk kata tersebut. |
 | `irab` | Tidak | Penjelasan I'rab untuk kata tersebut. |
+| `link` | Tidak | URL tautan terkait kata tersebut (misal: ke kamus atau referensi). |
 
 **Penting:** Untuk memisahkan antar paragraf, buat satu baris kosong dan isi kolom `berharakat` dengan `---`.
 
